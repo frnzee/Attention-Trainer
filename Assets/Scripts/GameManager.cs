@@ -13,22 +13,6 @@ public class GameManager : MonoBehaviour
         Success,
         Fail
     }
-    /*    public enum NumberClicked
-        {
-            Zero = 0,
-            One = 1,
-            Two = 2,
-            Three = 3,
-            Four = 4,
-            Five = 5,
-            Six = 6,
-            Seven = 7,
-            Eight = 8,
-            Nine = 9
-        } */
-
-    public delegate void NumberDelegate(int number);
-    public NumberDelegate numberDelegate;
 
     public TimeBar timeBar;
     public Slider amountSlider;
@@ -37,7 +21,6 @@ public class GameManager : MonoBehaviour
     public RectTransform playgroundField;
 
     public Number ButtonPrefab;
-    private Number _spawnedButton;
 
     public TextMeshProUGUI difficultyTimeText;
     public TextMeshProUGUI amountText;
@@ -47,11 +30,10 @@ public class GameManager : MonoBehaviour
     public GameObject successMessage;
     public GameObject failMessage;
 
-    private GameObject[] numbers;
-
     private float _timer;
     private int _amount;
     private int _x, _y, _sizeX, _sizeY;
+    private int _lastPressedButton;
 
     private GameState _currentGameState = GameState.None;
 
@@ -67,17 +49,17 @@ public class GameManager : MonoBehaviour
             _currentGameState = GameState.Game;
             startButtonText.text = "Stop";
             _timer = difficultySlider.value;
-            _amount = (int)amountSlider.value; ;
+            _amount = (int)amountSlider.value;
+            var counter = 0;
             timeBar.SetMaxTime(_timer);
-            numberDelegate = NumberClicked;
-            while (_amount >= 0)
+            while (counter <= _amount)
             {
                 _x = Random.Range(50, _sizeX - 50);
                 _y = Random.Range(50, _sizeY - 50);
-                _spawnedButton = Instantiate(ButtonPrefab, new Vector2(_x, _y), Quaternion.identity, playgroundField.transform);
-                _spawnedButton.transform.localPosition = new Vector2(_x, _y);
-                _spawnedButton.Initialize(_amount);
-                _amount--;
+                var spawnedButton = Instantiate(ButtonPrefab, new Vector2(_x, _y), Quaternion.identity, playgroundField.transform);
+                spawnedButton.transform.localPosition = new Vector2(_x, _y);
+                spawnedButton.Initialize(counter, NumberClicked);
+                counter++;
                 difficultySlider.interactable = false;
                 amountSlider.interactable = false;
             }
@@ -91,6 +73,8 @@ public class GameManager : MonoBehaviour
             timeLeft.text = "Time left: " + _timer.ToString("0") + "s";
             difficultySlider.interactable = true;
             amountSlider.interactable = true;
+            failMessage.SetActive(false);
+            successMessage.SetActive(false);
         }
     }
     public void AmountChange()
@@ -105,7 +89,22 @@ public class GameManager : MonoBehaviour
     }
     public void NumberClicked(int number)
     {
-        Debug.Log(number);
+        if (number == 0)
+        {
+            _lastPressedButton = number;
+        }
+        else if (number == _lastPressedButton + 1)
+        {
+            _lastPressedButton = number;
+            if (number == _amount)
+            {
+                _currentGameState = GameState.Success;
+            }
+        }
+        else
+        {
+            _currentGameState = GameState.Fail;
+        }
     }
     private void Update()
     {
@@ -125,9 +124,29 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        else if (_currentGameState == GameState.Fail)
+        {
+            difficultySlider.interactable = true;
+            amountSlider.interactable = true;
+            failMessage.SetActive(true);
+            Destroy(GameObject.FindWithTag("SpawnedButtons"));
+        }
+        else if (_currentGameState == GameState.Success)
+        {
+            difficultySlider.interactable = true;
+            amountSlider.interactable = true;
+            successMessage.SetActive(true);
+            Destroy(GameObject.FindWithTag("SpawnedButtons"));
+        }
+        else if (_currentGameState == GameState.None)
+        {
+            difficultySlider.interactable = true;
+            amountSlider.interactable = true;
+            Destroy(GameObject.FindWithTag("SpawnedButtons"));
+        }
         else
         {
-
+            _currentGameState = GameState.None;
         }
     }
 }

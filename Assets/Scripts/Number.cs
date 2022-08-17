@@ -1,25 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Number : MonoBehaviour
 {
-
-    public GameObject _spawnedButton;
-    public TextMeshProUGUI _currentNumberText;
-//    public GameManager.NumberDelegate numberDelegate;
-//    public GameManager.NumberDelegate pressedNumber;
-    public void Initialize(int CurrentNumber)
+    public TextMeshProUGUI CurrentNumberText;
+    private Action<int> pressedNumber;
+    private int _currentNumber;
+    public void Initialize(int CurrentNumber, Action<int> numberDelegate)
     {
-//        pressedNumber = numberDelegate;
-//        numberDelegate(CurrentNumber);
-        _spawnedButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = CurrentNumber.ToString();
+        _currentNumber = CurrentNumber;
+        pressedNumber = numberDelegate;
+        CurrentNumberText.text = CurrentNumber.ToString();
     }
     public void OnClick()
     {
-//        pressedNumber(int.Parse(GetComponentInChildren<TMPro.TextMeshProUGUI>().text));
-        Destroy(_spawnedButton);
+        pressedNumber(_currentNumber);
+        Destroy(gameObject);
     }
 }
