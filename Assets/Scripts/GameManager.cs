@@ -13,28 +13,31 @@ public class GameManager : MonoBehaviour
         Success,
         Fail
     }
-/*    public enum NumberClicked
-    {
-        Zero = 0,
-        One = 1,
-        Two = 2,
-        Three = 3,
-        Four = 4,
-        Five = 5,
-        Six = 6,
-        Seven = 7,
-        Eight = 8,
-        Nine = 9
-    } */
-    public TimeBar timeBar;
+    /*    public enum NumberClicked
+        {
+            Zero = 0,
+            One = 1,
+            Two = 2,
+            Three = 3,
+            Four = 4,
+            Five = 5,
+            Six = 6,
+            Seven = 7,
+            Eight = 8,
+            Nine = 9
+        } */
 
+    public delegate void NumberDelegate(int number);
+    public NumberDelegate numberDelegate;
+
+    public TimeBar timeBar;
     public Slider amountSlider;
     public Slider difficultySlider;
 
     public RectTransform playgroundField;
 
     public Number ButtonPrefab;
-    public Number _spawnedButton;
+    private Number _spawnedButton;
 
     public TextMeshProUGUI difficultyTimeText;
     public TextMeshProUGUI amountText;
@@ -43,6 +46,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject successMessage;
     public GameObject failMessage;
+
+    private GameObject[] numbers;
 
     private float _timer;
     private int _amount;
@@ -64,6 +69,7 @@ public class GameManager : MonoBehaviour
             _timer = difficultySlider.value;
             _amount = (int)amountSlider.value; ;
             timeBar.SetMaxTime(_timer);
+            numberDelegate = NumberClicked;
             while (_amount >= 0)
             {
                 _x = Random.Range(50, _sizeX - 50);
@@ -97,6 +103,10 @@ public class GameManager : MonoBehaviour
         _timer = difficultySlider.value;
         difficultyTimeText.text = difficultySlider.value.ToString() + " seconds";
     }
+    public void NumberClicked(int number)
+    {
+        Debug.Log(number);
+    }
     private void Update()
     {
         if (_currentGameState == GameState.Game)
@@ -108,8 +118,6 @@ public class GameManager : MonoBehaviour
                 timeLeft.text = "Time left: " + _timer.ToString("0") + "s";
                 if (_timer <= 0)
                 {
-                    Debug.Log(_timer);
-                    Debug.Log(_amount);
                     difficultySlider.interactable = true;
                     amountSlider.interactable = true;
                     _currentGameState = GameState.Fail;

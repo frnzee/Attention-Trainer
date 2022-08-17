@@ -4,7 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - _spawnedButton: {fileID: 4990157589606162972, guid: f2fd07dabac3f4875b8d3aa795d140a9, type: 3}
+  - ButtonPrefab: {fileID: 4990157589606162972, guid: f2fd07dabac3f4875b8d3aa795d140a9, type: 3}
+  - _currentNumberText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

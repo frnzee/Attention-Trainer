@@ -8,20 +8,18 @@ public class Number : MonoBehaviour
 {
 
     public GameObject _spawnedButton;
-    private int currentNumberCallback;
+    public TextMeshProUGUI _currentNumberText;
+//    public GameManager.NumberDelegate numberDelegate;
+//    public GameManager.NumberDelegate pressedNumber;
     public void Initialize(int CurrentNumber)
     {
-        currentNumberCallback = CurrentNumber;
-        Debug.Log(CurrentNumber);
+//        pressedNumber = numberDelegate;
+//        numberDelegate(CurrentNumber);
         _spawnedButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = CurrentNumber.ToString();
-    }
-    public void NumberClicked(int number)
-    {
-
     }
     public void OnClick()
     {
-        Debug.Log(currentNumberCallback);
+//        pressedNumber(int.Parse(GetComponentInChildren<TMPro.TextMeshProUGUI>().text));
         Destroy(_spawnedButton);
     }
 }

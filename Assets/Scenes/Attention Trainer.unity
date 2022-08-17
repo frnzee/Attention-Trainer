@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 121125559}
   m_Layer: 5
   m_Name: PlaygroundField
-  m_TagString: Untagged
+  m_TagString: playgroundField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -626,7 +626,7 @@ RectTransform:
   - {fileID: 2010163144}
   - {fileID: 44982876}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2115,7 +2115,6 @@ MonoBehaviour:
   difficultySlider: {fileID: 1978201942}
   playgroundField: {fileID: 121125558}
   ButtonPrefab: {fileID: 7402383085726147579, guid: f2fd07dabac3f4875b8d3aa795d140a9, type: 3}
-  _spawnedButton: {fileID: 0}
   difficultyTimeText: {fileID: 931585330}
   amountText: {fileID: 60582957}
   timeLeft: {fileID: 44982877}
@@ -2134,7 +2133,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1400098537
 GameObject:
@@ -2626,7 +2625,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1963302496
 GameObject:
