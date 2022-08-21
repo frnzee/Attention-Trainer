@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState
+    private enum GameState
     {
         None,
         Game,
@@ -14,98 +12,134 @@ public class GameManager : MonoBehaviour
         Fail
     }
 
-    public TimeBar timeBar;
-    public Slider amountSlider;
-    public Slider difficultySlider;
+    public TimeBar TimeBar;
+    public Slider AmountSlider;
+    public Slider DifficultySlider;
 
-    public RectTransform playgroundField;
+    public RectTransform PlaygroundField;
 
     public Number ButtonPrefab;
 
-    public TextMeshProUGUI difficultyTimeText;
-    public TextMeshProUGUI amountText;
-    public TextMeshProUGUI timeLeft;
-    public TextMeshProUGUI startButtonText;
+    public TextMeshProUGUI DifficultyTimeText;
+    public TextMeshProUGUI AmountText;
+    public TextMeshProUGUI TimeLeft;
+    public TextMeshProUGUI StartButtonText;
 
-    public GameObject successMessage;
-    public GameObject failMessage;
+    public GameObject SuccessMessage;
+    public GameObject FailMessage;
 
     private float _timer;
+
     private int _amount;
     private int _x, _y, _sizeX, _sizeY;
     private int _lastPressedButton;
+    private int _expectedButton = 0;
 
     private GameState _currentGameState = GameState.None;
 
     private void Start()
     {
-        _sizeX = (int)playgroundField.rect.size.x;
-        _sizeY = (int)playgroundField.rect.size.y;
+        var rect = PlaygroundField.rect;
+        _sizeX = (int)rect.size.x;
+        _sizeY = (int)rect.size.y;
     }
+
     public void StartGame()
     {
         if (_currentGameState == GameState.None)
         {
             _currentGameState = GameState.Game;
-            startButtonText.text = "Stop";
-            _timer = difficultySlider.value;
-            _amount = (int)amountSlider.value;
+            DifficultySlider.interactable = false;
+            AmountSlider.interactable = false;
+
+            StartButtonText.text = "Stop";
+
+            _timer = DifficultySlider.value;
+            _amount = (int)AmountSlider.value;
+
+            TimeBar.SetMaxTime(_timer);
+
             var counter = 0;
-            timeBar.SetMaxTime(_timer);
+
             while (counter <= _amount)
             {
                 _x = Random.Range(50, _sizeX - 50);
                 _y = Random.Range(50, _sizeY - 50);
-                var spawnedButton = Instantiate(ButtonPrefab, new Vector2(_x, _y), Quaternion.identity, playgroundField.transform);
+
+                var spawnedButton = Instantiate(ButtonPrefab, PlaygroundField.transform);
                 spawnedButton.transform.localPosition = new Vector2(_x, _y);
                 spawnedButton.Initialize(counter, NumberClicked);
+
                 counter++;
-                difficultySlider.interactable = false;
-                amountSlider.interactable = false;
             }
         }
         else
         {
             _currentGameState = GameState.None;
-            startButtonText.text = "Start";
-            _timer = difficultySlider.value;
-            timeBar.SetTime(_timer);
-            timeLeft.text = "Time left: " + _timer.ToString("0") + "s";
-            difficultySlider.interactable = true;
-            amountSlider.interactable = true;
-            failMessage.SetActive(false);
-            successMessage.SetActive(false);
+            _timer = DifficultySlider.value;
+            StartButtonText.text = "Start";
+
+            TimeBar.SetTime(_timer);
+            TimeBar.SetMaxTime(_timer);
+            TimeLeft.text = "Time left: " + _timer.ToString("0") + "s";
+
+            DifficultySlider.interactable = true;
+            AmountSlider.interactable = true;
+
+            FailMessage.SetActive(false);
+            SuccessMessage.SetActive(false);
+            _expectedButton = 0;
         }
     }
+
     public void AmountChange()
     {
-        _amount = (int)amountSlider.value;
-        amountText.text = (_amount + 1).ToString() + " numbers";
+        _amount = (int)AmountSlider.value;
+        AmountText.text = _amount + 1 + " numbers";
     }
     public void DifficultyChange()
     {
-        _timer = difficultySlider.value;
-        difficultyTimeText.text = difficultySlider.value.ToString() + " seconds";
+        _timer = DifficultySlider.value;
+        DifficultyTimeText.text = DifficultySlider.value.ToString() + " seconds";
+        TimeLeft.text = "Time left: " + DifficultySlider.value;
     }
-    public void NumberClicked(int number)
+
+    private void NumberClicked(int number)
     {
-        if (number == 0)
+        if (number != _expectedButton)
         {
-            _lastPressedButton = number;
+            Fail();
         }
-        else if (number == _lastPressedButton + 1)
+        ++_expectedButton;
+        if (_expectedButton == _amount + 1)
         {
-            _lastPressedButton = number;
-            if (number == _amount)
-            {
-                _currentGameState = GameState.Success;
-            }
-        }
-        else
-        {
-            _currentGameState = GameState.Fail;
+            Success();
         }
     }
+
+    private void None()
+    {
+        DifficultySlider.interactable = true;
+        AmountSlider.interactable = true;
+
+        Destroy(GameObject.FindWithTag("SpawnedButtons"));
+
+        SuccessMessage.SetActive(false);
+        FailMessage.SetActive(false);
+    }
+    private void Fail()
+    {
+        _currentGameState = GameState.Fail;
+        FailMessage.SetActive(true);
+        _expectedButton = 0;
+    }
+    private void Success()
+    {
+        _currentGameState = GameState.Success;
+        SuccessMessage.SetActive(true);
+        _expectedButton = 0;
+    }
+
     private void Update()
     {
         if (_currentGameState == GameState.Game)
@@ -113,40 +147,17 @@ public class GameManager : MonoBehaviour
             if (_timer > 0)
             {
                 _timer -= Time.deltaTime;
-                timeBar.SetTime(_timer);
-                timeLeft.text = "Time left: " + _timer.ToString("0") + "s";
+                TimeBar.SetTime(_timer);
+                TimeLeft.text = "Time left: " + _timer.ToString("0") + "s";
                 if (_timer <= 0)
                 {
-                    difficultySlider.interactable = true;
-                    amountSlider.interactable = true;
-                    _currentGameState = GameState.Fail;
-                    failMessage.SetActive(true);
+                    Fail();
                 }
             }
         }
-        else if (_currentGameState == GameState.Fail)
-        {
-            difficultySlider.interactable = true;
-            amountSlider.interactable = true;
-            failMessage.SetActive(true);
-            Destroy(GameObject.FindWithTag("SpawnedButtons"));
-        }
-        else if (_currentGameState == GameState.Success)
-        {
-            difficultySlider.interactable = true;
-            amountSlider.interactable = true;
-            successMessage.SetActive(true);
-            Destroy(GameObject.FindWithTag("SpawnedButtons"));
-        }
         else if (_currentGameState == GameState.None)
         {
-            difficultySlider.interactable = true;
-            amountSlider.interactable = true;
-            Destroy(GameObject.FindWithTag("SpawnedButtons"));
-        }
-        else
-        {
-            _currentGameState = GameState.None;
+            None();
         }
     }
 }

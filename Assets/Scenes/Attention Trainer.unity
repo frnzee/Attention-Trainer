@@ -2110,17 +2110,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94fdf02ff1cc94f5e8a56122e59317c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBar: {fileID: 2010163145}
-  amountSlider: {fileID: 735502564}
-  difficultySlider: {fileID: 1978201942}
-  playgroundField: {fileID: 121125558}
+  TimeBar: {fileID: 2010163145}
+  AmountSlider: {fileID: 735502564}
+  DifficultySlider: {fileID: 1978201942}
+  PlaygroundField: {fileID: 121125558}
   ButtonPrefab: {fileID: 7402383085726147579, guid: f2fd07dabac3f4875b8d3aa795d140a9, type: 3}
-  difficultyTimeText: {fileID: 931585330}
-  amountText: {fileID: 60582957}
-  timeLeft: {fileID: 44982877}
-  startButtonText: {fileID: 498533263}
-  successMessage: {fileID: 2035574668}
-  failMessage: {fileID: 802585213}
+  DifficultyTimeText: {fileID: 931585330}
+  AmountText: {fileID: 60582957}
+  TimeLeft: {fileID: 44982877}
+  StartButtonText: {fileID: 498533263}
+  SuccessMessage: {fileID: 2035574668}
+  FailMessage: {fileID: 802585213}
 --- !u!4 &1332868577
 Transform:
   m_ObjectHideFlags: 0
@@ -3047,7 +3047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d26488e40544c1c86fd9dec963bc9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 2010163147}
+  BarSlider: {fileID: 2010163147}
 --- !u!222 &2010163146
 CanvasRenderer:
   m_ObjectHideFlags: 0

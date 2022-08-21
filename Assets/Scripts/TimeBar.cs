@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 public class TimeBar : MonoBehaviour
 {
-    public Slider slider;
+    public Slider BarSlider;
     public void SetMaxTime(float _timer)
     {
-        slider.maxValue = _timer;
-        slider.value = _timer;
+        BarSlider.maxValue = _timer;
+        BarSlider.value = _timer;
     }
     public void SetTime(float _timer)
     {
-        slider.value = _timer;
+        BarSlider.value = _timer;
     }
 }
